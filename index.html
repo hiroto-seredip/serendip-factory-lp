@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工場診断サービス｜セレンディップ・ロボクロス株式会社</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+      color: #1a2640;
+      background: #fff;
+      line-height: 1.8;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; }
+
+    /* ── Layout ── */
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+    .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
+    section { padding: 80px 0; }
+
+    /* ── Scroll Fade-in ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Section Label ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #c8a84b;
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: #c8a84b;
+      flex-shrink: 0;
+    }
+    .section-label.light { color: #c8a84b; }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+      font-weight: 900;
+      line-height: 1.45;
+      color: #0f2045;
+      margin-bottom: 36px;
+      position: relative;
+      padding-bottom: 20px;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 40px; height: 2px;
+      background: linear-gradient(90deg, #c8a84b, transparent);
+    }
+    .section-title.light { color: #fff; }
+    .section-title.light::after { background: linear-gradient(90deg, #c8a84b, transparent); }
+    .section-title.centered { text-align: center; }
+    .section-title.centered::after { left: 50%; transform: translateX(-50%); }
+
+    /* ── Body Text ── */
+    .body-text { font-size: 0.93rem; color: #4a5568; line-height: 1.95; }
+    .body-text.light { color: #c5cfe0; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      padding: 15px 34px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.22s, color 0.22s, transform 0.15s, box-shadow 0.22s;
+      text-align: center;
+      position: relative;
+    }
+    .btn-gold {
+      background: #c8a84b;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(200,168,75,0.22);
+    }
+    .btn-gold:hover { background: #b8983b; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,168,75,0.32); }
+    .btn-outline-white {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.5);
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .btn-outline-navy {
+      background: transparent;
+      color: #0f2045;
+      border: 1.5px solid #0f2045;
+    }
+    .btn-outline-navy:hover { background: #0f2045; color: #fff; transform: translateY(-2px); }
+    .btn-navy {
+      background: #0f2045;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(15,32,69,0.18);
+    }
+    .btn-navy:hover { background: #1a3460; transform: translateY(-2px); }
+
+    /* ══════════════════════════════
+       HEADER
+    ══════════════════════════════ */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(10, 22, 52, 0.97);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(200,168,75,0.15);
+    }
+    .header-logo {
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+    }
+    .header-logo span { font-size: 0.68rem; font-weight: 400; opacity: 0.55; display: block; letter-spacing: 0.1em; }
+    .header-cta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+      background: #c8a84b;
+      padding: 10px 22px;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .header-cta:hover { background: #b8983b; transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    #hero {
+      background:
+        linear-gradient(135deg, rgba(8,18,42,0.88) 0%, rgba(15,32,69,0.70) 50%, rgba(11,26,58,0.74) 100%),
+        url('images/hero-factory.jpg') center center / cover no-repeat;
+      padding: 148px 0 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      right: 5%; top: 10%;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.06);
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      right: 10%; top: 20%;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.08);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+    .hero-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #c8a84b;
+      margin-bottom: 24px;
+    }
+    .hero-label::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: #c8a84b;
+    }
+    .hero-h1 {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 900;
+      line-height: 1.42;
+      color: #fff;
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+    .hero-h1 em { font-style: normal; color: #c8a84b; }
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .hero-stat-big { display: flex; flex-direction: column; }
+    .hero-stat-big .num {
+      font-size: clamp(3rem, 6vw, 4.4rem);
+      font-weight: 900;
+      color: #c8a84b;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hero-stat-big .num sup { font-size: 1.3rem; vertical-align: super; font-weight: 700; }
+    .hero-stat-big .label {
+      font-size: 0.75rem;
+      color: #7a8eaa;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      margin-top: 6px;
+      border-top: 1px solid rgba(200,168,75,0.25);
+      padding-top: 6px;
+    }
+    .hero-stat-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.12); }
+    .hero-stat-list { display: flex; flex-direction: column; gap: 9px; }
+    .hero-stat {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.83rem;
+      color: #8a9dc0;
+      font-weight: 500;
+    }
+    .hero-stat::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: #c8a84b;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .anchor-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(200,168,75,0.28);
+      border-left: 3px solid #c8a84b;
+      padding: 18px 22px;
+      margin-bottom: 40px;
+      max-width: 560px;
+    }
+    .anchor-box p { font-size: 0.87rem; color: #c5cfe0; line-height: 1.8; }
+    .anchor-box strong { color: #fff; font-size: 0.95rem; }
+    .hero-cta-group { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* ══════════════════════════════
+       SELF CHECK
+    ══════════════════════════════ */
+    #selfcheck {
+      background: #f4f6f9;
+      position: relative;
+    }
+    #selfcheck::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c8a84b 0%, transparent 60%);
+    }
+    .check-intro { font-size: 0.91rem; color: #4a5568; margin-bottom: 28px; line-height: 1.9; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .check-list {
+      list-style: none;
+      border-top: 1px solid #d8dde6;
+      margin-bottom: 0;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 0;
+      border-bottom: 1px solid #d8dde6;
+      font-size: 0.92rem;
+      color: #2d3748;
+      transition: background 0.15s;
+    }
+    .check-list li:hover { background: rgba(200,168,75,0.04); }
+    .check-list li label { padding: 14px 0; align-items: center; }
+    .check-item-icon { flex-shrink: 0; color: #0f2045; opacity: 0.45; margin-right: 2px; }
+    .check-item-icon svg { width: 17px; height: 17px; stroke-width: 1.5; display: block; }
+    .check-icon {
+      width: 20px; height: 20px;
+      border: 1.5px solid #a0b0cc;
+      border-radius: 3px;
+      flex-shrink: 0;
+      position: relative;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .check-icon.checked { background: #0f2045; border-color: #0f2045; }
+    .check-icon.checked::after {
+      content: '';
+      position: absolute;
+      left: 4px; top: 1px;
+      width: 9px; height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg);
+    }
+    .check-result {
+      display: none;
+      margin-top: 28px;
+      margin-bottom: 24px;
+      padding: 22px 26px;
+      border-left: 3px solid #c8a84b;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(15,32,69,0.07);
+    }
+    .check-result.show { display: block; }
+    .check-result-count { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; color: #c8a84b; margin-bottom: 5px; }
+    .check-result-msg { font-size: 0.93rem; font-weight: 700; color: #0f2045; margin-bottom: 4px; }
+    .check-result-sub { font-size: 0.83rem; color: #4a5568; }
+    .check-note { font-size: 0.78rem; color: #718096; margin-top: 28px; margin-bottom: 20px; }
+
+    /* ══════════════════════════════
+       ABOUT
+    ══════════════════════════════ */
+    #about {
+      background: #fff;
+      position: relative;
+    }
+    #about::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #d8dde6 20%, #d8dde6 80%, transparent);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .about-visual {
+      background: linear-gradient(160deg, #f8f9fb 0%, #f0f3f8 100%);
+      border-left: 3px solid #c8a84b;
+      border-top: 1px solid #e0e5ef;
+      border-right: 1px solid #e0e5ef;
+      border-bottom: 1px solid #e0e5ef;
+      padding: 36px 32px;
+      box-shadow: 0 4px 24px rgba(15,32,69,0.07);
+    }
+    .about-visual-stat {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      color: #0f2045;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .about-visual-stat span { font-size: 1.1rem; font-weight: 700; }
+    .about-visual-label { font-size: 0.75rem; color: #8a9dc0; font-weight: 500; margin-bottom: 24px; letter-spacing: 0.08em; border-bottom: 1px solid #d8dde6; padding-bottom: 20px; }
+    .about-visual-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid #e8edf4;
+      font-size: 0.86rem; color: #4a5568;
+    }
+    .about-visual-item:last-child { border-bottom: none; }
+    .about-visual-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #c8a84b;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       POINTS
+    ══════════════════════════════ */
+    #points {
+      background: linear-gradient(160deg, #0d1e42 0%, #0f2045 50%, #0b1a38 100%);
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #points::before {
+      content: '';
+      position: absolute;
+      left: -100px; bottom: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.05);
+    }
+    .point-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(200,168,75,0.12);
+      border: 1px solid rgba(200,168,75,0.12);
+    }
+    .point-card {
+      background: rgba(10, 22, 52, 0.85);
+      padding: 44px 32px 40px;
+      transition: background 0.25s;
+      position: relative;
+    }
+    .point-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #c8a84b, transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .point-card:hover { background: rgba(15, 32, 69, 0.95); }
+    .point-card:hover::before { opacity: 1; }
+    .point-icon {
+      width: 64px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(200,168,75,0.18);
+      border: 1px solid rgba(200,168,75,0.3);
+      border-radius: 50%;
+      margin-bottom: 24px;
+      color: #fff;
+      transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .point-card:hover .point-icon {
+      background: rgba(200,168,75,0.32);
+      border-color: rgba(200,168,75,0.6);
+      box-shadow: 0 0 20px rgba(200,168,75,0.2), 0 0 6px rgba(200,168,75,0.12);
+    }
+    .point-icon svg { width: 28px; height: 28px; stroke-width: 1.5; }
+    .point-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; color: rgba(200,168,75,0.6); margin-bottom: 8px; }
+    .point-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .point-body { font-size: 0.86rem; color: #7a90b4; line-height: 1.85; }
+
+    /* ══════════════════════════════
+       REPORT
+    ══════════════════════════════ */
+    #report {
+      background: linear-gradient(180deg, #fff 0%, #f8f9fb 100%);
+      position: relative;
+    }
+    .report-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 60px;
+      align-items: start;
+    }
+    .toc-list { list-style: none; }
+    .toc-item {
+      display: flex;
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid #eaeef5;
+      align-items: flex-start;
+      transition: padding-left 0.2s;
+    }
+    .toc-item:hover { padding-left: 6px; }
+    .toc-num {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #c8a84b;
+      letter-spacing: 0.1em;
+      min-width: 34px;
+      margin-top: 2px;
+    }
+    .toc-text { font-size: 0.91rem; color: #2d3748; line-height: 1.6; }
+    .toc-text small { display: block; font-size: 0.78rem; color: #8a9dc0; margin-top: 3px; }
+    .report-sidebar {
+      background: #fff;
+      border: 1px solid #dce2ed;
+      border-top: 3px solid #0f2045;
+      padding: 32px 28px;
+      box-shadow: 0 4px 20px rgba(15,32,69,0.08);
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .report-sidebar:hover { box-shadow: 0 8px 32px rgba(15,32,69,0.14); transform: translateY(-2px); }
+    .sidebar-title { font-size: 0.85rem; font-weight: 700; color: #0f2045; margin-bottom: 10px; }
+    .sidebar-body { font-size: 0.83rem; color: #4a5568; line-height: 1.8; margin-bottom: 22px; }
+    /* プレースホルダー */
+    .report-sidebar--placeholder {
+      border-top-color: #c8c8d8;
+      background: #f8f9fb;
+      box-shadow: none;
+      border-style: dashed;
+    }
+    .report-sidebar--placeholder:hover { transform: none; box-shadow: none; }
+    .sidebar-placeholder-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #b0bcc8;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #d8dde6;
+      padding-bottom: 10px;
+    }
+    .sidebar-placeholder-btn {
+      width: 100%;
+      padding: 13px 0;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #a0aec0;
+      border: 1.5px dashed #c8cfd8;
+      background: #f0f3f7;
+      cursor: default;
+      letter-spacing: 0.02em;
+    }
+
+    /* ══════════════════════════════
+       VALUE × AVAILABILITY (統合)
+    ══════════════════════════════ */
+    #value-section {
+      background: linear-gradient(155deg, #060e22 0%, #0a1830 45%, #0c1e3c 100%);
+      padding: 96px 0 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* 背景の幾何学装飾 */
+    #value-section::before {
+      content: '';
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 480px; height: 480px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.06);
+      pointer-events: none;
+    }
+    #value-section::after {
+      content: '';
+      position: absolute;
+      left: -60px; bottom: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.05);
+      pointer-events: none;
+    }
+    /* セクション上部ゴールドライン */
+    .value-topline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #c8a84b 30%, #c8a84b 70%, transparent 100%);
+    }
+    .value-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+    }
+    .value-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .value-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      color: #c8a84b;
+      margin-bottom: 0;
+    }
+    .value-label::before, .value-label::after {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: rgba(200,168,75,0.5);
+    }
+    /* 2カラムグリッド */
+    .value-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 48px;
+      align-items: center;
+      margin-bottom: 56px;
+    }
+    .value-divider-v {
+      width: 1px;
+      height: 200px;
+      background: linear-gradient(180deg, transparent, rgba(200,168,75,0.3) 30%, rgba(200,168,75,0.3) 70%, transparent);
+      justify-self: center;
+    }
+    /* 左：価格対比 */
+    .value-price-col {
+      text-align: center;
+    }
+    .price-context {
+      font-size: 0.75rem;
+      color: #5a7090;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .price-original {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900;
+      color: #5a7090;
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    /* 打ち消し線は数字部分のspanだけに適用 */
+    .price-original .strike {
+      text-decoration: line-through;
+      text-decoration-color: rgba(200,168,75,0.65);
+      text-decoration-thickness: 3px;
+    }
+    .price-original .tilde {
+      font-size: 0.55em;
+      vertical-align: middle;
+      margin-left: 2px;
+      text-decoration: none;
+    }
+    .price-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .price-arrow-line {
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: rgba(200,168,75,0.4);
+    }
+    .price-arrow-icon {
+      color: #c8a84b;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .price-after-label {
+      font-size: 0.7rem;
+      color: #7a90b4;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .price-after {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: #c8a84b;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .price-after-note {
+      font-size: 0.78rem;
+      color: #7a90b4;
+    }
+    /* 右：希少性 */
+    .value-scarcity-col {
+      text-align: center;
+    }
+    .scarcity-badge {
+      display: inline-block;
+      border: 1px solid rgba(200,168,75,0.3);
+      border-top: 2px solid #c8a84b;
+      padding: 28px 40px;
+      background: rgba(200,168,75,0.04);
+      position: relative;
+    }
+    .scarcity-context {
+      font-size: 0.72rem;
+      color: #5a7090;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .scarcity-numbers {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 10px;
+    }
+    .scarcity-item {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 5px;
+      padding: 0 32px;
+    }
+    .scarcity-num {
+      font-size: clamp(2.8rem, 5vw, 4rem);
+      font-weight: 900;
+      color: #c8a84b;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .scarcity-unit {
+      font-size: 0.78rem;
+      color: #a0b0cc;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    /* 縦区切り線 */
+    .scarcity-sep {
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(200,168,75,0.35) 20%, rgba(200,168,75,0.35) 80%, transparent);
+      align-self: stretch;
+      flex-shrink: 0;
+    }
+    .scarcity-note {
+      font-size: 0.75rem;
+      color: #5a7090;
+      line-height: 1.7;
+    }
+    /* ボトムコピー */
+    .value-bottom {
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 40px;
+    }
+    .value-copy {
+      font-size: 0.88rem;
+      color: #7a90b4;
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+    .value-copy strong { color: rgba(255,255,255,0.9); font-weight: 700; }
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+      .value-grid {
+        grid-template-columns: 1fr;
+        gap: 40px 0;
+      }
+      .value-divider-v { display: none; }
+      .scarcity-badge { padding: 24px 28px; }
+    }
+
+    /* ══════════════════════════════
+       FLOW
+    ══════════════════════════════ */
+    #flow { background: #f4f6f9; position: relative; }
+    #flow::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c8a84b 0%, transparent 60%);
+    }
+    .flow-track {
+      position: relative;
+      padding-top: 16px;
+    }
+    .flow-connector {
+      position: absolute;
+      top: 42px;
+      left: calc(10% + 22px);
+      right: calc(10% + 22px);
+      height: 1px;
+      background: linear-gradient(90deg, #c8a84b, rgba(200,168,75,0.3));
+      z-index: 0;
+    }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .flow-step {
+      background: #fff;
+      padding: 28px 16px 24px;
+      text-align: center;
+      border: 1px solid #dce2ed;
+      box-shadow: 0 2px 12px rgba(15,32,69,0.06);
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .flow-step:hover { box-shadow: 0 6px 24px rgba(15,32,69,0.12); transform: translateY(-3px); }
+    .flow-icon {
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      width: 44px; height: 44px;
+      background: #f0f3f8;
+      border-radius: 50%;
+      color: #0f2045;
+      border: 1px solid #dce2ed;
+      position: relative;
+      z-index: 1;
+    }
+    .flow-icon svg { width: 19px; height: 19px; stroke-width: 1.5; }
+    .flow-step-num { font-size: 0.65rem; letter-spacing: 0.14em; color: #c8a84b; font-weight: 700; margin-bottom: 8px; }
+    .flow-step-title { font-size: 0.88rem; font-weight: 700; color: #0f2045; margin-bottom: 6px; }
+    .flow-step-body { font-size: 0.75rem; color: #8a9dc0; line-height: 1.7; }
+
+    /* #limited → value-section に統合済み */
+
+    /* ══════════════════════════════
+       FAQ
+    ══════════════════════════════ */
+    #faq { background: #f4f6f9; }
+    .faq-list { max-width: 700px; }
+    .faq-item { border-bottom: 1px solid #d8dde6; padding: 24px 0; }
+    .faq-q {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-weight: 700;
+      font-size: 0.93rem;
+      color: #0f2045;
+      margin-bottom: 10px;
+    }
+    .faq-q-mark {
+      background: #0f2045;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .faq-a {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 0.86rem;
+      color: #4a5568;
+      line-height: 1.9;
+    }
+    .faq-a-mark {
+      background: #c8a84b;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ══════════════════════════════
+       FINAL CTA
+    ══════════════════════════════ */
+    #final-cta {
+      background: linear-gradient(160deg, #060d1e 0%, #0a1630 40%, #0f2045 100%);
+      padding: 112px 0 96px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* 上部ゴールドライン（太め・中央集光） */
+    #final-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(200,168,75,0.3) 20%,
+        #c8a84b 40%,
+        #c8a84b 60%,
+        rgba(200,168,75,0.3) 80%,
+        transparent 100%);
+    }
+    /* 中央背景グロー（ゴールドの光芒） */
+    #final-cta::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse at top, rgba(200,168,75,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    /* 左右の幾何装飾円 */
+    .fcta-ring-l, .fcta-ring-r {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .fcta-ring-l {
+      width: 400px; height: 400px;
+      border: 1px solid rgba(200,168,75,0.05);
+      left: -140px; bottom: -100px;
+    }
+    .fcta-ring-r {
+      width: 300px; height: 300px;
+      border: 1px solid rgba(200,168,75,0.06);
+      right: -80px; top: -60px;
+    }
+    .final-cta-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+    /* セクションラベル */
+    .final-cta-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: #c8a84b;
+      margin-bottom: 28px;
+    }
+    .final-cta-label::before, .final-cta-label::after {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: rgba(200,168,75,0.5);
+    }
+    /* メイン見出し */
+    .final-cta-h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+    /* 見出し下のゴールドアンダーライン */
+    .final-cta-rule {
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, #c8a84b, rgba(200,168,75,0.3));
+      margin: 0 auto 20px;
+    }
+    .final-cta-sub {
+      font-size: 0.88rem;
+      color: #6a80a0;
+      margin-bottom: 48px;
+      line-height: 1.85;
+    }
+    /* ボタン群 */
+    .final-cta-btns {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+    /* メインボタン：ゴールド・特大・グロー */
+    .btn-cta-primary {
+      display: inline-block;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: linear-gradient(135deg, #d4b050 0%, #c8a84b 50%, #b89438 100%);
+      padding: 20px 60px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      box-shadow:
+        0 6px 24px rgba(200,168,75,0.35),
+        0 2px 8px rgba(200,168,75,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta-primary::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%);
+      pointer-events: none;
+    }
+    .btn-cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 12px 36px rgba(200,168,75,0.45),
+        0 4px 12px rgba(200,168,75,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    /* サブボタン */
+    .btn-cta-secondary {
+      display: inline-block;
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: #6a80a0;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(106,128,160,0.4);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-cta-secondary:hover { color: #c8a84b; border-color: rgba(200,168,75,0.5); }
+    /* 電話 */
+    .tel-block {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 36px;
+    }
+    .tel-label { font-size: 0.7rem; color: #4a6080; letter-spacing: 0.12em; margin-bottom: 8px; text-transform: uppercase; }
+    .tel-num {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.06em;
+      display: block;
+      transition: color 0.2s;
+    }
+    .tel-num:hover { color: #c8a84b; }
+    .tel-note { font-size: 0.74rem; color: #4a6080; margin-top: 6px; }
+    /* モバイル */
+    @media (max-width: 768px) {
+      #final-cta { padding: 80px 0 72px; }
+      .btn-cta-primary { padding: 18px 40px; font-size: 0.95rem; width: 100%; max-width: 320px; }
+      .final-cta-inner { padding: 0 20px; }
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: #060d1e;
+      padding: 36px 40px;
+      text-align: center;
+      border-top: 1px solid rgba(200,168,75,0.1);
+    }
+    .footer-name { font-size: 0.8rem; color: #7a90b4; margin-bottom: 5px; }
+    .footer-copy { font-size: 0.7rem; color: #3a4a60; }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+      .wrap, .wrap-wide { padding: 0 20px; }
+      section { padding: 60px 0; }
+      header { padding: 12px 20px; }
+      .header-logo span { display: none; }
+      .header-logo { font-size: 0.72rem; }
+      .header-cta { font-size: 0.72rem; padding: 9px 16px; }
+      #hero { padding: 110px 0 68px; }
+      .hero-inner { padding: 0 20px; }
+      .hero-stats { gap: 20px; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .point-grid { grid-template-columns: 1fr; }
+      .report-grid { grid-template-columns: 1fr; gap: 36px; }
+      .report-sidebar { order: -1; }
+      .flow-connector { display: none; }
+      .flow-steps { grid-template-columns: 1fr; gap: 2px; }
+      .flow-step:hover { transform: none; }
+      .limited-box { padding: 32px 24px; }
+      .limited-box:hover { transform: none; }
+      .final-cta-btns { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 320px; }
+      .anchor2-inner, .final-cta-inner { padding: 0 20px; }
+    }
+    @media (max-width: 480px) {
+      .hero-h1 { font-size: 1.5rem; }
+      .section-title { font-size: 1.25rem; }
+    }
+
+    /* ── Section Photos（追加） ── */
+    .about-photo {
+      width: 100%;
+      display: block;
+      border-top: 3px solid #c8a84b;
+      box-shadow: 0 6px 24px rgba(15,32,69,0.12);
+      margin-bottom: 22px;
+    }
+    .sidebar-photo {
+      width: 100%;
+      display: block;
+      border-top: 3px solid #c8a84b;
+      box-shadow: 0 4px 16px rgba(15,32,69,0.12);
+      margin-bottom: 18px;
+    }
+    /* シネマティックな区切り帯 */
+    .section-divider {
+      height: 260px;
+      background:
+        linear-gradient(180deg, rgba(8,18,42,0.55) 0%, rgba(8,18,42,0.30) 50%, rgba(8,18,42,0.60) 100%),
+        url('images/divider-factory.jpg') center 35% / cover no-repeat;
+    }
+    @media (max-width: 768px) {
+      .section-divider { height: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    セレンディップ・ロボクロス株式会社
+    <span>SERENDIP ROBOCROSS</span>
+  </div>
+  <a href="https://www.serendip-rxm.com/inquiry/" class="header-cta">診断を申し込む</a>
+</header>
+
+<!-- ① HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Factory Diagnosis Service</p>
+    <h1 class="hero-h1">
+      コンサルタントが現場を1日診る、<br>
+      <em>構想提案レポート。</em>
+    </h1>
+    <div class="hero-stats">
+      <div class="hero-stat-big">
+        <span class="num">80<sup>社以上</sup></span>
+        <span class="label">診断実績（全国）</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat-list">
+        <span class="hero-stat">全国対応</span>
+        <span class="hero-stat">投資回収3年未満が基準</span>
+        <span class="hero-stat">秘密保持契約を締結</span>
+      </div>
+    </div>
+    <div class="anchor-box">
+      <p>
+        <strong>本来150万円相当のコンサルティングを、交通費のみでご提供。</strong><br>
+        月4社限定の受付枠です。現在の空き状況はお問い合わせフォームよりご確認ください。
+      </p>
+    </div>
+    <div class="hero-cta-group">
+      <a href="https://www.serendip-rxm.com/inquiry/" class="btn btn-gold">工場診断を申し込む</a>
+      <a href="#selfcheck" class="btn btn-outline-white">まず10秒セルフチェック</a>
+    </div>
+  </div>
+</section>
+
+<!-- ② SELF CHECK -->
+<section id="selfcheck">
+  <div class="wrap">
+    <p class="section-label">Self Check</p>
+    <h2 class="section-title">10秒セルフチェック</h2>
+    <p class="check-intro">
+      後工程の省人化・自動化に課題を感じている工場様へ。<br>
+      以下に1つでも当てはまれば、診断で改善の糸口が見つかります。
+    </p>
+    <ul class="check-list" id="checkList">
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci0"></span><span class="check-item-icon"><i data-lucide="users"></i></span>検査・仕分け・梱包などの後工程に人手が集中している</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci1"></span><span class="check-item-icon"><i data-lucide="alert-triangle"></i></span>作業のバラつきが品質や納期に影響している</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci2"></span><span class="check-item-icon"><i data-lucide="help-circle"></i></span>自動化を検討したが、どの工程から着手すればよいかわからない</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci3"></span><span class="check-item-icon"><i data-lucide="bot"></i></span>ロボット・AI導入を試みたが費用対効果が見えなかった</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci4"></span><span class="check-item-icon"><i data-lucide="file-bar-chart"></i></span>現場改善のアイデアはあるが、経営への説明資料がない</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci5"></span><span class="check-item-icon"><i data-lucide="clock"></i></span>人材不足が慢性化しており、5年後の体制が描けていない</label></li>
+      <li><label style="display:flex;align-items:center;gap:14px;cursor:pointer;width:100%;"><input type="checkbox" class="check-cb" style="opacity:0;position:absolute;"> <span class="check-icon" id="ci6"></span><span class="check-item-icon"><i data-lucide="building-2"></i></span>他社の工場改善事例を客観的に聞く機会がない</label></li>
+    </ul>
+
+    <div class="check-result" id="checkResult">
+      <p class="check-result-count" id="checkResultCount"></p>
+      <p class="check-result-msg" id="checkResultMsg"></p>
+      <p class="check-result-sub" id="checkResultSub"></p>
+    </div>
+    <div id="checkCTA" style="display:none; margin-bottom:28px;">
+      <a href="https://www.serendip-rxm.com/inquiry/" class="btn btn-gold" style="display:inline-block;">工場診断を申し込む</a>
+    </div>
+
+    <p class="check-note">※ チェックリストPDF版を無料でダウンロードいただけます</p>
+    <a href="#" class="btn btn-outline-navy">チェックリストをダウンロード（PDF）</a>
+  </div>
+</section>
+
+<!-- ③ ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <p class="section-label">About</p>
+        <h2 class="section-title">工場診断とは</h2>
+        <p class="body-text">
+          自社の工場を毎日見ていると、慣れによる「見えない課題」が生まれます。<br><br>
+          セレンディップ・ロボクロスの工場診断は、モノづくりのプロフェッショナルが貴社工場に1日うかがい、第三者の客観的な視点から生産性向上に必要な改善ポイントを洗い出すサービスです。<br><br>
+          「なんとなく課題がある」を「具体的にどう変えるか」、そして「経営計画とどう接続するか」まで落とし込んだ構想提案レポートにまとめます。
+        </p>
+      </div>
+      <div>
+        <img class="about-photo" src="images/about-factory.jpg" alt="協働ロボットが稼働する工場の現場">
+        <div class="about-visual">
+          <div class="about-visual-stat">80<span>社以上</span></div>
+          <div class="about-visual-label">診断実績（全国）</div>
+          <div class="about-visual-item">✔ 全国対応</div>
+          <div class="about-visual-item">✔ 投資回収3年未満が基準</div>
+          <div class="about-visual-item">✔ 秘密保持契約を締結</div>
+          <div class="about-visual-item">✔ 経営層への報告会まで一貫</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ POINTS -->
+<section id="points">
+  <div class="wrap">
+    <p class="section-label" style="color:#c8a84b;">Three Points</p>
+    <h2 class="section-title light">3つのポイント</h2>
+  </div>
+  <div class="wrap-wide">
+    <div class="point-grid">
+      <div class="point-card">
+        <div class="point-icon"><i data-lucide="scan-search"></i></div>
+        <div class="point-num">01</div>
+        <div class="point-title">客観的な評価</div>
+        <p class="point-body">社内では気づきにくい「慣れによる盲点」を、外部コンサルタントが構造的に可視化します。内部では言いづらい課題も、第三者として整理・整合させます。</p>
+      </div>
+      <div class="point-card">
+        <div class="point-icon"><i data-lucide="cpu"></i></div>
+        <div class="point-num">02</div>
+        <div class="point-title">最新技術との照合</div>
+        <p class="point-body">協働ロボット・AI・省人化ソリューションの最新動向を踏まえ、貴社工程への適用可能性を判断。机上論ではなく、導入実績をもとに評価します。</p>
+      </div>
+      <div class="point-card">
+        <div class="point-icon"><i data-lucide="trending-up"></i></div>
+        <div class="point-num">03</div>
+        <div class="point-title">経営層と現場をつなぐ</div>
+        <p class="point-body">現場の改善案を経営計画・投資対効果と接続し、意思決定に使えるレポートとして提出。報告会では経営層・現場責任者の双方に向けてご提案します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ REPORT -->
+<section id="report">
+  <div class="wrap">
+    <p class="section-label">Diagnosis Report</p>
+    <h2 class="section-title">診断レポートの中身</h2>
+    <div class="report-grid">
+      <div>
+        <ol class="toc-list">
+          <li class="toc-item">
+            <span class="toc-num">CH.1</span>
+            <div class="toc-text">経営計画との接続<small>診断の目的・前提整理</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.2</span>
+            <div class="toc-text">As-Is（現状把握）<small>工程フロー・人員配置・稼働実態</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.3</span>
+            <div class="toc-text">WHY（課題の構造分析）<small>なぜ今の状態になっているか</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.4</span>
+            <div class="toc-text">To-Be（あるべき姿）<small>3〜5年後の工場像</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.5</span>
+            <div class="toc-text">Gap分析<small>現状とあるべき姿の差分整理</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.6</span>
+            <div class="toc-text">PoC提案<small>検証すべき施策・優先度</small></div>
+          </li>
+          <li class="toc-item">
+            <span class="toc-num">CH.7</span>
+            <div class="toc-text">ロードマップ<small>短期・中期・長期のアクションプラン</small></div>
+          </li>
+        </ol>
+      </div>
+      <div class="report-sidebar">
+        <img class="sidebar-photo" src="images/report-doc.jpg" alt="構想提案レポートのイメージ">
+        <p class="sidebar-placeholder-label">SAMPLE</p>
+        <p class="sidebar-title">構想提案レポート</p>
+        <p class="sidebar-body">
+          実際の診断レポートのサンプルPDFを準備中です。公開までしばらくお待ちください。
+        </p>
+        <div class="sidebar-placeholder-btn">サンプルレポート（準備中）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ VALUE × AVAILABILITY 統合セクション -->
+<section id="value-section">
+  <div class="value-topline"></div>
+  <div class="value-inner">
+
+    <!-- ヘッダー -->
+    <div class="value-header">
+      <p class="value-label">Value &amp; Availability</p>
+    </div>
+
+    <!-- メイン 2カラム -->
+    <div class="value-grid">
+
+      <!-- 左：価格対比 -->
+      <div class="value-price-col fade-in">
+        <p class="price-context">戦略コンサルに依頼すれば</p>
+        <div class="price-original"><span class="strike">¥1,500,000</span><span class="tilde">〜</span></div>
+        <div class="price-arrow">
+          <span class="price-arrow-line"></span>
+          <span class="price-arrow-icon">↓</span>
+          <span class="price-arrow-line"></span>
+        </div>
+        <p class="price-after-label">セレンディップ・ロボクロスでは</p>
+        <div class="price-after">交通費のみ</div>
+        <p class="price-after-note">実質負担ゼロで、同等のレポートを。</p>
+      </div>
+
+      <!-- 縦区切り線 -->
+      <div class="value-divider-v"></div>
+
+      <!-- 右：希少性 -->
+      <div class="value-scarcity-col fade-in">
+        <div class="scarcity-badge">
+          <p class="scarcity-context">これだけの価値を受け取れるのは</p>
+          <div class="scarcity-numbers">
+            <div class="scarcity-item">
+              <span class="scarcity-num">4</span>
+              <span class="scarcity-unit">社 ／ 月</span>
+            </div>
+            <div class="scarcity-sep"></div>
+            <div class="scarcity-item">
+              <span class="scarcity-num">1</span>
+              <span class="scarcity-unit">枠 ／ 週</span>
+            </div>
+          </div>
+          <p class="scarcity-note">
+            1社1社に本気で向き合うため、受付を制限しています。<br>
+            満枠の場合は翌月以降のご案内となります。
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /.value-grid -->
+
+    <!-- ボトム -->
+    <div class="value-bottom fade-in">
+      <p class="value-copy">
+        将来的な協働ロボット導入のパートナー候補として、<strong>初回診断を交通費のみでご提供</strong>しています。<br>
+        ご興味をお持ちの方は、まず空き状況をご確認ください。
+      </p>
+      <a href="https://www.serendip-rxm.com/inquiry/" class="btn btn-gold" style="padding: 17px 48px; font-size: 0.95rem; letter-spacing: 0.08em;">診断枠を確認する</a>
+    </div>
+
+  </div><!-- /.value-inner -->
+</section>
+
+<!-- ⑦ FLOW -->
+<section id="flow">
+  <div class="wrap">
+    <p class="section-label">Process</p>
+    <h2 class="section-title">診断の流れ</h2>
+    <div class="flow-track">
+    <div class="flow-connector"></div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-icon"><i data-lucide="mail"></i></div>
+        <div class="flow-step-num">STEP 01</div>
+        <div class="flow-step-title">お問い合わせ</div>
+        <div class="flow-step-body">フォームまたはお電話でご連絡ください</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon"><i data-lucide="calendar"></i></div>
+        <div class="flow-step-num">STEP 02</div>
+        <div class="flow-step-title">日程確定</div>
+        <div class="flow-step-body">担当者と訪問日・事前ヒアリング内容を調整</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon"><i data-lucide="search"></i></div>
+        <div class="flow-step-num">STEP 03</div>
+        <div class="flow-step-title">現地診断（1日）</div>
+        <div class="flow-step-body">午前：ヒアリング<br>午後：現場視察</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon"><i data-lucide="file-text"></i></div>
+        <div class="flow-step-num">STEP 04</div>
+        <div class="flow-step-title">レポート作成</div>
+        <div class="flow-step-body">2〜3週間で診断報告書を作成・提出</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon"><i data-lucide="presentation"></i></div>
+        <div class="flow-step-num">STEP 05</div>
+        <div class="flow-step-title">報告会（2時間）</div>
+        <div class="flow-step-body">経営層・現場責任者への提案発表</div>
+      </div>
+    </div><!-- /.flow-steps -->
+    </div><!-- /.flow-track -->
+  </div>
+</section>
+
+<!-- シネマティック区切り帯 -->
+<div class="section-divider"></div>
+
+<!-- ⑨ FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">よくあるご質問</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <p class="faq-q"><span class="faq-q-mark">Q</span>診断費用はかかりますか？</p>
+        <p class="faq-a"><span class="faq-a-mark">A</span>初回の工場診断費用はいただいておりません。交通費等の実費のみご請求させていただきます。</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q"><span class="faq-q-mark">Q</span>機密情報が外部に漏れませんか？</p>
+        <p class="faq-a"><span class="faq-a-mark">A</span>秘密保持契約（NDA）を締結したうえで診断を実施します。貴社の生産情報・技術情報は厳重に管理いたします。</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q"><span class="faq-q-mark">Q</span>診断後に営業されませんか？</p>
+        <p class="faq-a"><span class="faq-a-mark">A</span>診断後に無理な提案・押し売りは行いません。レポートをご覧いただいたうえで、導入を検討されるかどうかはお客様のご判断です。「診断だけ受けてみたい」という方も歓迎します。</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q"><span class="faq-q-mark">Q</span>どんな会社が診断してくれるのですか？</p>
+        <p class="faq-a"><span class="faq-a-mark">A</span>セレンディップ・ロボクロス株式会社は2018年設立、協働ロボットのレンタル・導入支援を中心に事業を展開しています。2024年5月にセレンディップグループに加入。全国80社以上の工場診断実績があります。</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q"><span class="faq-q-mark">Q</span>全国どこでも対応できますか？</p>
+        <p class="faq-a"><span class="faq-a-mark">A</span>はい、全国対応しています。交通費の実費はご請求しますが、北海道・九州・沖縄を含め国内全域で診断実績があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑩ FINAL CTA -->
+<section id="final-cta">
+  <!-- 背景装飾 -->
+  <div class="fcta-ring-l"></div>
+  <div class="fcta-ring-r"></div>
+
+  <div class="final-cta-inner fade-in">
+    <p class="final-cta-label">Contact</p>
+    <h2 class="final-cta-h2">まず、現場を<br>見せてください。</h2>
+    <div class="final-cta-rule"></div>
+    <p class="final-cta-sub">
+      月4社限定。空き状況はフォームからご確認ください。<br>
+      「話を聞くだけ」でも構いません。
+    </p>
+
+    <div class="final-cta-btns">
+      <a href="https://www.serendip-rxm.com/inquiry/" class="btn-cta-primary">工場診断を申し込む</a>
+      <a href="#selfcheck" class="btn-cta-secondary">まず10秒セルフチェックをする</a>
+    </div>
+
+    <div class="tel-block">
+      <p class="tel-label">Phone</p>
+      <a href="tel:0120905230" class="tel-num">0120-905-230</a>
+      <p class="tel-note">平日 9:00〜18:00　／　IP電話の方: 050-5433-8094</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-name">セレンディップ・ロボクロス株式会社</p>
+  <p class="footer-copy">© 2024 Serendip Robocross Inc. All rights reserved.</p>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  // ── Scroll Fade-in ──
+  (function () {
+    var targets = document.querySelectorAll(
+      '.point-card, .toc-item, .faq-item, .flow-step, .about-visual, .report-sidebar, .limited-box, .check-result'
+    );
+    targets.forEach(function (el) { el.classList.add('fade-in'); });
+
+    // section-level fade
+    document.querySelectorAll('section > .wrap, section > .wrap-wide, #anchor2 .anchor2-inner, #final-cta .final-cta-inner').forEach(function(el){
+      el.classList.add('fade-in');
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          // stagger children if multiple
+          var siblings = entry.target.parentElement.querySelectorAll('.fade-in');
+          var idx = Array.prototype.indexOf.call(siblings, entry.target);
+          entry.target.style.transitionDelay = (idx * 0.06) + 's';
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(function (el) { io.observe(el); });
+  })();
+  // アイコンサイズ統一
+  document.querySelectorAll('.point-icon svg').forEach(function(s){ s.setAttribute('width','22'); s.setAttribute('height','22'); });
+  document.querySelectorAll('.flow-icon svg').forEach(function(s){ s.setAttribute('width','20'); s.setAttribute('height','20'); });
+  document.querySelectorAll('.check-item-icon svg').forEach(function(s){ s.setAttribute('width','18'); s.setAttribute('height','18'); });
+</script>
+<script>
+  (function () {
+    var cbs = document.querySelectorAll('.check-cb');
+    var icons = document.querySelectorAll('.check-icon');
+    var result = document.getElementById('checkResult');
+    var countEl = document.getElementById('checkResultCount');
+    var msgEl = document.getElementById('checkResultMsg');
+    var subEl = document.getElementById('checkResultSub');
+    var ctaEl = document.getElementById('checkCTA');
+
+    var levels = [
+      { min: 1, max: 2, msg: '改善の余地あり。', sub: '診断を通じて具体的な改善ポイントを明確にできます。' },
+      { min: 3, max: 5, msg: '構造的な課題の可能性があります。', sub: '複合的な問題が絡み合っているケースが多く、工場診断をおすすめします。' },
+      { min: 6, max: 7, msg: '早急な診断を推奨します。', sub: '一度プロの目で現状を整理し、具体的な改善策を描くべき状態です。' }
+    ];
+
+    function update() {
+      var count = 0;
+      cbs.forEach(function (cb, i) {
+        if (cb.checked) {
+          count++;
+          icons[i].classList.add('checked');
+        } else {
+          icons[i].classList.remove('checked');
+        }
+      });
+
+      if (count === 0) {
+        result.classList.remove('show');
+        ctaEl.style.display = 'none';
+        return;
+      }
+
+      var level = levels.find(function (l) { return count >= l.min && count <= l.max; });
+      countEl.textContent = count + '項目該当';
+      msgEl.textContent = level.msg;
+      subEl.textContent = level.sub;
+      result.classList.add('show');
+      ctaEl.style.display = 'block';
+    }
+
+    cbs.forEach(function (cb) { cb.addEventListener('change', update); });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# 生成元の高解像度PNG（未使用）はローカル保管のみ。LPはimages内のJPGを使用。
+*.png
+images/*.png
+.DS_Store
